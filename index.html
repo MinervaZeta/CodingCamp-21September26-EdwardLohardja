@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense & Budget Visualizer</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- ── Header ── -->
+    <header class="app-header">
+      <h1>💰 Expense &amp; Budget Visualizer</h1>
+      <p class="subtitle">Track your spending, stay in control.</p>
+
+    <!-- ── Toggle button ── -->
+     <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
+    </header>
+
+    <!-- ── Balance Banner ── -->
+    <section class="balance-banner" aria-label="Total Balance">
+      <span class="balance-label">Total Expenses</span>
+      <span class="balance-amount" id="totalBalance">$0.00</span>
+    </section>
+
+    <!-- ── Tab Bar ── -->
+    <nav class="tab-bar" role="tablist" aria-label="Views">
+      <button class="tab-btn active" id="tabDashboard" role="tab" aria-selected="true"  aria-controls="viewDashboard">📊 Dashboard</button>
+      <button class="tab-btn"        id="tabMonthly"   role="tab" aria-selected="false" aria-controls="viewMonthly">📅 Monthly Summary</button>
+    </nav>
+
+    <!-- ── Dashboard View ── -->
+    <div id="viewDashboard" role="tabpanel" aria-labelledby="tabDashboard">
+
+    <!-- ── Main Grid ── -->
+    <main class="main-grid">
+
+      <!-- Left column: Form + Transaction List -->
+      <div class="left-col">
+
+        <!-- Add Expense Form -->
+        <section class="card" aria-label="Add Expense">
+          <h2 class="card-title">Add Expense</h2>
+          <form id="expenseForm" novalidate>
+
+            <div class="form-group">
+              <label for="itemName">Item Name</label>
+              <input
+                type="text"
+                id="itemName"
+                placeholder="e.g. Lunch, Bus ticket…"
+                autocomplete="off"
+              />
+              <span class="error-msg" id="nameError">Please enter an item name.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="itemAmount">Amount ($)</label>
+              <input
+                type="number"
+                id="itemAmount"
+                placeholder="0.00"
+                min="0.01"
+                step="0.01"
+              />
+              <span class="error-msg" id="amountError">Please enter a valid amount.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="itemCategory">Category</label>
+              <select id="itemCategory">
+                <!-- populated by JS -->
+              </select>
+              <span class="error-msg" id="categoryError">Please select a category.</span>
+            </div>
+
+            <button type="submit" class="btn-add">+ Add Expense</button>
+          </form>
+        </section>
+
+        <!-- Manage Categories -->
+        <section class="card" aria-label="Manage Categories">
+          <h2 class="card-title">Manage Categories</h2>
+
+          <!-- Add new category form -->
+          <form id="categoryForm" novalidate>
+            <div class="cat-add-row">
+              <!-- Color picker -->
+              <input
+                type="color"
+                id="newCatColor"
+                value="#6366f1"
+                title="Pick a color"
+                aria-label="Category color"
+                class="cat-color-input"
+              />
+              <!-- Name input -->
+              <input
+                type="text"
+                id="newCatName"
+                placeholder="New category name…"
+                autocomplete="off"
+                class="cat-name-input"
+                maxlength="32"
+              />
+              <button type="submit" class="btn-cat-add" aria-label="Add category">+</button>
+            </div>
+            <span class="error-msg" id="catNameError">Please enter a unique category name.</span>
+          </form>
+
+          <!-- Category chips list -->
+          <ul class="cat-chips" id="catChips" role="list" aria-label="Category list"></ul>
+        </section>
+
+        <!-- Transaction List -->
+        <section class="card" aria-label="Transaction List">
+          <div class="list-header">
+            <h2 class="card-title">Transactions</h2>
+            <button class="btn-clear" id="clearAll" title="Clear all transactions">Clear All</button>
+          </div>
+          
+          <!-- Add this new Spending Limit input block -->
+          <div class="form-group" style="margin-bottom: 14px; flex-direction: row; align-items: center; gap: 8px;">
+            <label for="spendingLimit" style="margin-bottom: 0; white-space: nowrap;">⚠️ Set Highlight Limit ($):</label>
+            <input 
+              type="number" 
+              id="spendingLimit" 
+              placeholder="No limit" 
+              min="0" 
+              step="0.01" 
+              style="padding: 6px 10px; font-size: 0.85rem;"
+            />
+          </div>
+
+          <ul class="transaction-list" id="transactionList" role="list">
+            <!-- populated by JS -->
+          </ul>
+
+          <p class="empty-state" id="emptyState">No expenses yet. Add one above!</p>
+        </section>
+
+      </div>
+
+      <!-- Right column: Chart -->
+      <div class="right-col">
+        <section class="card chart-card" aria-label="Spending Chart">
+          <h2 class="card-title">Spending by Category</h2>
+          <div class="chart-container">
+            <canvas id="spendingChart" role="img" aria-label="Pie chart of spending by category"></canvas>
+          </div>
+          <p class="empty-state" id="chartEmpty">Add expenses to see the chart.</p>
+
+          <!-- Category totals legend -->
+          <ul class="category-totals" id="categoryTotals" role="list" aria-label="Category totals"></ul>
+        </section>
+      </div>
+
+    </main>
+
+    </div><!-- /viewDashboard -->
+
+    <!-- ── Monthly Summary View ── -->
+    <div id="viewMonthly" role="tabpanel" aria-labelledby="tabMonthly" hidden>
+      <section class="card monthly-card">
+
+        <!-- Month navigator -->
+        <div class="monthly-nav">
+          <button class="month-nav-btn" id="monthPrev" aria-label="Previous month">&#8592;</button>
+          <span class="monthly-nav-label" id="monthNavLabel">—</span>
+          <button class="month-nav-btn" id="monthNext" aria-label="Next month">&#8594;</button>
+        </div>
+
+        <!-- KPI row -->
+        <div class="monthly-kpi-row" id="monthlyKpiRow"></div>
+
+        <!-- Category breakdown bars -->
+        <div class="monthly-breakdown" id="monthlyBreakdown"></div>
+
+        <!-- Transaction table for the month -->
+        <div class="monthly-tx-wrap">
+          <h3 class="monthly-section-title">Transactions this month</h3>
+          <ul class="monthly-tx-list" id="monthlyTxList" role="list"></ul>
+          <p class="empty-state" id="monthlyEmpty" style="display:none;">No transactions for this month.</p>
+        </div>
+
+      </section>
+
+      <!-- Month history bar chart -->
+      <section class="card">
+        <h2 class="card-title">Monthly Spending History</h2>
+        <div class="history-chart-wrap">
+          <canvas id="historyChart" role="img" aria-label="Bar chart of monthly spending history"></canvas>
+        </div>
+        <p class="empty-state" id="historyEmpty">Add expenses to see history.</p>
+      </section>
+    </div><!-- /viewMonthly -->
+
+    <footer class="app-footer">
+      <p>Data is stored locally in your browser — nothing is sent anywhere.</p>
+    </footer>
+
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,941 @@
+/* ============================================================
+   Expense & Budget Visualizer — style.css
+   ============================================================ */
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-bg:         #f0f2f5;
+  --color-surface:    #ffffff;
+  --color-primary:    #4f46e5;
+  --color-primary-h:  #4338ca;
+  --color-danger:     #ef4444;
+  --color-danger-h:   #dc2626;
+  --color-text:       #1e1e2e;
+  --color-muted:      #6b7280;
+  --color-border:     #e5e7eb;
+  --color-food:       #f59e0b;
+  --color-transport:  #3b82f6;
+  --color-fun:        #ec4899;
+
+  --radius:     12px;
+  --radius-sm:  8px;
+  --shadow:     0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg:  0 4px 24px rgba(0, 0, 0, 0.12);
+  --transition: 0.18s ease;
+
+  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ── Dark Theme Variables ── */
+body.dark-theme {
+  --color-bg:         #0f172a; /* Dark slate background */
+  --color-surface:    #1e293b; /* Darker slate card surface */
+  --color-text:       #f8fafc; /* Crisp off-white text */
+  --color-muted:      #94a3b8; /* Muted gray-blue text */
+  --color-border:     #334155; /* Slate border color */
+  --color-primary:    #818cf8; /* A brighter violet so it pops on dark backgrounds */
+  --color-primary-h:  #6366f1;
+}
+
+/* ── Smooth Transition Effect ── */
+body {
+  transition: background-color var(--transition), color var(--transition);
+}
+.card, .transaction-item, input, select, button {
+  transition: background-color var(--transition), border-color var(--transition), color var(--transition), box-shadow var(--transition);
+}
+
+/* ── Fix input focus background in dark mode ── */
+body.dark-theme .form-group input:focus,
+body.dark-theme .form-group select:focus {
+  background: var(--color-surface);
+}
+
+/* ── Fix delete button hover color in dark mode ── */
+body.dark-theme .btn-delete:hover {
+  background: #2d1f2d;
+}
+
+/* ── Style for your theme button (assuming class="theme-btn") ── */
+.theme-btn {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1.5px solid var(--color-border);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px; /* Adjust placement as needed */
+  transition: background var(--transition), border-color var(--transition);
+}
+
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── App Wrapper ── */
+.app-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+/* ── Header ── */
+.app-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.app-header h1 {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--color-text);
+}
+
+.subtitle {
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+/* ── Balance Banner ── */
+.balance-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, var(--color-primary), #7c3aed);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 24px 32px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+.balance-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+.balance-amount {
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -1px;
+  transition: color var(--transition);
+}
+
+/* ── Main Grid ── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Card ── */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+
+.card:last-child {
+  margin-bottom: 0;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--color-muted);
+  margin-bottom: 18px;
+}
+
+/* ── Form ── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--color-text);
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-bg);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  background: #fff;
+}
+
+.form-group input.invalid,
+.form-group select.invalid {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.error-msg {
+  font-size: 0.78rem;
+  color: var(--color-danger);
+  margin-top: 4px;
+  display: none;
+}
+
+.error-msg.visible {
+  display: block;
+}
+
+/* Select arrow */
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+/* ── Buttons ── */
+.btn-add {
+  width: 100%;
+  padding: 12px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+}
+
+.btn-add:hover {
+  background: var(--color-primary-h);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-add:active {
+  transform: translateY(0);
+}
+
+.btn-clear {
+  background: none;
+  border: 1.5px solid var(--color-border);
+  color: var(--color-muted);
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.btn-clear:hover {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+/* ── List Header ── */
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.list-header .card-title {
+  margin-bottom: 0;
+}
+
+/* ── Transaction List ── */
+.transaction-list {
+  list-style: none;
+  max-height: 340px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* subtle scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.transaction-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.transaction-list::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 99px;
+}
+
+/* ── Transaction Item ── */
+.transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  transition: box-shadow var(--transition);
+  animation: slideIn 0.22s ease;
+}
+
+.transaction-item:hover {
+  box-shadow: var(--shadow);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.category-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* dot color is set via inline --dot-color custom property */
+
+.item-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-category {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.item-amount {
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  color: var(--color-text);
+}
+
+.btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  color: var(--color-muted);
+  font-size: 1rem;
+  line-height: 1;
+  transition: background var(--transition), color var(--transition);
+  flex-shrink: 0;
+}
+
+.btn-delete:hover {
+  background: #fef2f2;
+  color: var(--color-danger);
+}
+
+/* ── Empty State ── */
+.empty-state {
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  padding: 20px 0 4px;
+}
+
+/* ── Chart ── */
+.chart-card {
+  position: sticky;
+  top: 24px;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto 20px;
+}
+
+/* ── Category Totals ── */
+.category-totals {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.category-totals li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.875rem;
+}
+
+.cat-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* swatch color is set via inline --swatch-color custom property */
+
+.cat-name {
+  flex: 1;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.cat-amount {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.cat-pct {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  min-width: 38px;
+  text-align: right;
+}
+
+/* ── Footer ── */
+.app-footer {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+/* ============================================================
+   Tab Bar
+   ============================================================ */
+.tab-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--color-border);
+  padding-bottom: 0;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  padding: 10px 20px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+}
+
+.tab-btn:hover {
+  color: var(--color-primary);
+  background: rgba(79, 70, 229, 0.05);
+}
+
+.tab-btn.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  background: rgba(79, 70, 229, 0.06);
+}
+
+/* ============================================================
+   Monthly Summary
+   ============================================================ */
+
+/* ── Month card ── */
+.monthly-card {
+  margin-bottom: 24px;
+}
+
+/* ── Month navigator ── */
+.monthly-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 12px;
+}
+
+.monthly-nav-label {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+  flex: 1;
+}
+
+.month-nav-btn {
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  color: var(--color-text);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.month-nav-btn:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.month-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── KPI row ── */
+.monthly-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 480px) {
+  .monthly-kpi-row { grid-template-columns: 1fr 1fr; }
+}
+
+.kpi-card {
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.kpi-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--color-muted);
+  margin-bottom: 4px;
+}
+
+.kpi-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.5px;
+}
+
+.kpi-value.kpi-highlight {
+  color: var(--color-primary);
+}
+
+/* ── Category breakdown bars ── */
+.monthly-section-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--color-muted);
+  margin-bottom: 14px;
+}
+
+.monthly-breakdown {
+  margin-bottom: 28px;
+}
+
+.monthly-breakdown .monthly-section-title {
+  margin-bottom: 14px;
+}
+
+.breakdown-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.breakdown-cat {
+  font-size: 0.82rem;
+  font-weight: 600;
+  width: 80px;
+  flex-shrink: 0;
+  color: var(--color-text);
+}
+
+.breakdown-bar-track {
+  flex: 1;
+  height: 10px;
+  background: var(--color-border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.breakdown-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+/* bar fill color is set via inline --bar-color custom property */
+
+.breakdown-amt {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text);
+  width: 64px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.breakdown-pct {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  width: 38px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Monthly transaction list ── */
+.monthly-tx-wrap {
+  border-top: 1.5px solid var(--color-border);
+  padding-top: 20px;
+}
+
+.monthly-tx-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.monthly-tx-list::-webkit-scrollbar { width: 5px; }
+.monthly-tx-list::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 99px; }
+
+.monthly-tx-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  font-size: 0.875rem;
+}
+
+.monthly-tx-date {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  width: 54px;
+  flex-shrink: 0;
+}
+
+.monthly-tx-name {
+  flex: 1;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.monthly-tx-cat {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  flex-shrink: 0;
+}
+
+.monthly-tx-amt {
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── History bar chart ── */
+.history-chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 220px;
+}
+
+/* Keep input text readable and backgrounds dark */
+body.dark-theme .form-group input,
+body.dark-theme .form-group select {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+/* Ensure dropdown menu text is readable inside target operating systems */
+body.dark-theme select option {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+/* Fix transaction list background cards */
+body.dark-theme .transaction-item {
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+/* Keep monthly view KPI sub-cards dark */
+body.dark-theme .kpi-card, 
+body.dark-theme .monthly-tx-item {
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+/* ============================================================
+   Custom Categories Manager
+   ============================================================ */
+
+/* ── Add-category row ── */
+.cat-add-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+/* Color swatch picker */
+.cat-color-input {
+  width: 38px;
+  height: 38px;
+  padding: 2px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  cursor: pointer;
+  flex-shrink: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.cat-color-input::-webkit-color-swatch-wrapper { padding: 0; }
+.cat-color-input::-webkit-color-swatch         { border: none; border-radius: 4px; }
+.cat-color-input::-moz-color-swatch            { border: none; border-radius: 4px; }
+
+/* Text input */
+.cat-name-input {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-bg);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.cat-name-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  background: var(--color-surface);
+}
+
+body.dark-theme .cat-name-input {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+body.dark-theme .cat-name-input:focus {
+  background: var(--color-surface);
+}
+
+/* + button */
+.btn-cat-add {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.btn-cat-add:hover  { background: var(--color-primary-h); transform: translateY(-1px); }
+.btn-cat-add:active { transform: translateY(0); }
+
+/* ── Category chips list ── */
+.cat-chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  min-height: 32px; /* keeps card from collapsing when empty */
+}
+
+/* Individual chip */
+.cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  /* background set inline via JS */
+  animation: chipIn 0.18s ease;
+  white-space: nowrap;
+}
+
+@keyframes chipIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.cat-chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.6);
+  flex-shrink: 0;
+}
+
+.cat-chip-label {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Delete button inside chip */
+.cat-chip-del {
+  background: rgba(0,0,0,0.18);
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 0.65rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  transition: background var(--transition);
+}
+
+.cat-chip-del:hover { background: rgba(0,0,0,0.38); }
+
+/* Built-in chips can't be deleted — hide the button */
+.cat-chip.builtin .cat-chip-del { display: none; }
+
+/* Slightly muted built-in style so custom ones stand out */
+.cat-chip.builtin { opacity: 0.88; }
+
+/* ── Dynamic dot/swatch colors via inline style ──
+   (replaces the old [data-cat] CSS selectors which
+   only worked for the 3 hardcoded categories) ── */
+.category-dot   { background: var(--dot-color, #94a3b8); }
+.cat-swatch     { background: var(--swatch-color, #94a3b8); }
+.breakdown-bar-fill { background: var(--bar-color, #94a3b8); }
+
+/* ── Spending Limit Highlight (Updated to include Monthly Items) ── */
+.transaction-item.over-limit,
+.monthly-tx-item.over-limit {
+  border-color: var(--color-danger);
+  background-color: rgba(239, 68, 68, 0.06);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.15);
+}
+
+body.dark-theme .transaction-item.over-limit,
+body.dark-theme .monthly-tx-item.over-limit {
+  background-color: rgba(239, 68, 68, 0.12);
+  border-color: var(--color-danger-h);
+}
+
+.transaction-item.over-limit .item-amount,
+.monthly-tx-item.over-limit .monthly-tx-amt {
+  color: var(--color-danger);
+}
+
+/* ── Over Limit Subtext Warning Message ── */
+.over-limit-warning {
+  color: var(--color-danger);
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-top: 4px;
+  display: block;
+}
+
